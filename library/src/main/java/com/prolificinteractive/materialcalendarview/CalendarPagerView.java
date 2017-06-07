@@ -21,7 +21,7 @@ import static com.prolificinteractive.materialcalendarview.MaterialCalendarView.
 import static java.util.Calendar.DATE;
 import static java.util.Calendar.DAY_OF_WEEK;
 
-abstract class CalendarPagerView extends ViewGroup implements View.OnClickListener {
+abstract class CalendarPagerView extends ViewGroup implements View.OnClickListener, View.OnLongClickListener {
 
     protected static final int DEFAULT_DAYS_IN_WEEK = 7;
     protected static final int DEFAULT_MAX_WEEKS = 6;
@@ -67,6 +67,7 @@ abstract class CalendarPagerView extends ViewGroup implements View.OnClickListen
         CalendarDay day = CalendarDay.from(calendar);
         DayView dayView = new DayView(getContext(), day);
         dayView.setOnClickListener(this);
+        dayView.setOnLongClickListener(this);
         dayViews.add(dayView);
         addView(dayView, new LayoutParams());
 
@@ -124,6 +125,7 @@ abstract class CalendarPagerView extends ViewGroup implements View.OnClickListen
     public void setSelectionEnabled(boolean selectionEnabled) {
         for (DayView dayView : dayViews) {
             dayView.setOnClickListener(selectionEnabled ? this : null);
+            dayView.setOnLongClickListener(selectionEnabled ? this : null);
             dayView.setClickable(selectionEnabled);
         }
     }
@@ -174,12 +176,12 @@ abstract class CalendarPagerView extends ViewGroup implements View.OnClickListen
     }
 
     protected void invalidateDecorators() {
-        final DayViewFacade facadeAccumulator = new DayViewFacade();
         for (DayView dayView : dayViews) {
-            facadeAccumulator.reset();
+            final DayViewFacade facadeAccumulator = new DayViewFacade();
             for (DecoratorResult result : decoratorResults) {
                 if (result.decorator.shouldDecorate(dayView.getDate())) {
-                    result.result.applyTo(facadeAccumulator);
+                    result.decorator.decorate(facadeAccumulator, dayView.getDate());
+                    // result.result.applyTo(facadeAccumulator);
                 }
             }
             dayView.applyFacade(facadeAccumulator);
@@ -192,6 +194,15 @@ abstract class CalendarPagerView extends ViewGroup implements View.OnClickListen
             final DayView dayView = (DayView) v;
             mcv.onDateClicked(dayView);
         }
+    }
+
+    @Override
+    public boolean onLongClick(View v) {
+        if (v instanceof DayView) {
+            final DayView dayView = (DayView) v;
+            mcv.onDateLongClicked(dayView);
+        }
+        return false;
     }
 
     /*

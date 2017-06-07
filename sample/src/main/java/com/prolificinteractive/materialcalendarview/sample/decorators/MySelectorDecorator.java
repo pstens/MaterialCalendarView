@@ -25,7 +25,7 @@ public class MySelectorDecorator implements DayViewDecorator {
     }
 
     @Override
-    public void decorate(DayViewFacade view) {
+    public void decorate(DayViewFacade view, CalendarDay day) {
         view.setSelectionDrawable(drawable);
     }
 }

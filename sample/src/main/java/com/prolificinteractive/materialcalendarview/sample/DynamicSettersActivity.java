@@ -14,9 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.NumberPicker;
 import android.widget.Toast;
 
-import com.prolificinteractive.materialcalendarview.CalendarDay;
-import com.prolificinteractive.materialcalendarview.CalendarMode;
-import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
+import com.prolificinteractive.materialcalendarview.*;
 
 import java.util.Calendar;
 import java.util.Random;
@@ -45,9 +43,9 @@ public class DynamicSettersActivity extends AppCompatActivity {
         currentTileWidth = MaterialCalendarView.DEFAULT_TILE_SIZE_DP;
         currentTileHeight = MaterialCalendarView.DEFAULT_TILE_SIZE_DP;
 
-        widget.setOnTitleClickListener(new View.OnClickListener() {
+        widget.setOnTitleClickListener(new OnTitleClickListener() {
             @Override
-            public void onClick(final View view) {
+            public void onTitleClicked(@NonNull View view, @NonNull CalendarDay month) {
                 Toast.makeText(DynamicSettersActivity.this, R.string.today, Toast.LENGTH_SHORT)
                         .show();
             }

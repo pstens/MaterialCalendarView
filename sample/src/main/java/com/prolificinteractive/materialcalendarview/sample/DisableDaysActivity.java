@@ -56,7 +56,7 @@ public class DisableDaysActivity extends AppCompatActivity {
         }
 
         @Override
-        public void decorate(DayViewFacade view) {
+        public void decorate(DayViewFacade view, CalendarDay day) {
             view.setDaysDisabled(true);
         }
 
@@ -107,7 +107,7 @@ public class DisableDaysActivity extends AppCompatActivity {
         }
 
         @Override
-        public void decorate(DayViewFacade view) {
+        public void decorate(DayViewFacade view, CalendarDay day) {
             view.setDaysDisabled(false);
         }
     }

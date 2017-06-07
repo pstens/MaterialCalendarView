@@ -219,6 +219,7 @@ public class MaterialCalendarView extends ViewGroup {
     private CalendarDay minDate = null;
     private CalendarDay maxDate = null;
 
+    private OnDateLongClickListener longClickListener;
     private OnDateSelectedListener listener;
     private OnMonthChangedListener monthListener;
     private OnRangeSelectedListener rangeListener;
@@ -1360,8 +1361,17 @@ public class MaterialCalendarView extends ViewGroup {
      *
      * @param listener Listener to be notified.
      */
-    public void setOnTitleClickListener(final OnClickListener listener) {
-        title.setOnClickListener(listener);
+    public void setOnTitleClickListener(final OnTitleClickListener listener) {
+        title.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listener.onTitleClicked(v, currentMonth);
+            }
+        });
+    }
+
+    public void setTitleBackgroundResource(final int backgroundResource) {
+        title.setBackgroundResource(backgroundResource);
     }
 
     /**
@@ -1474,6 +1484,31 @@ public class MaterialCalendarView extends ViewGroup {
             dispatchOnRangeSelected(lastDay, firstDay);
         } else {
             dispatchOnRangeSelected(firstDay, lastDay);
+        }
+    }
+
+    public void setOnDateLongClickListener(final OnDateLongClickListener listener) {
+        longClickListener = listener;
+    }
+
+    protected void onDateLongClicked(final DayView dayView) {
+        final CalendarDay currentDate = getCurrentDate();
+        final CalendarDay selectedDate = dayView.getDate();
+        final int currentMonth = currentDate.getMonth();
+        final int selectedMonth = selectedDate.getMonth();
+
+        if (calendarMode == CalendarMode.MONTHS
+                && allowClickDaysOutsideCurrentMonth
+                && currentMonth != selectedMonth) {
+            if (currentDate.isAfter(selectedDate)) {
+                goToPrevious();
+            } else if (currentDate.isBefore(selectedDate)) {
+                goToNext();
+            }
+        }
+
+        if (longClickListener != null) {
+            longClickListener.onDateLongClicked(selectedDate);
         }
     }
 

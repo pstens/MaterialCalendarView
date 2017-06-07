@@ -27,7 +27,7 @@ public class EventDecorator implements DayViewDecorator {
     }
 
     @Override
-    public void decorate(DayViewFacade view) {
+    public void decorate(DayViewFacade view, CalendarDay day) {
         view.addSpan(new DotSpan(5, color));
     }
 }
